@@ -211,7 +211,7 @@ public class GUI extends JPanel
     
     public void reEnableButtons() {
         /*
-        Reenable al the butons after the Process Hasbeen Completed
+        Reenable al the butons after the Process  Completed
         */
         go.setEnabled(true);
         browse.setEnabled(true);
