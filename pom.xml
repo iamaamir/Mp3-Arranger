@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.github</groupId>
+    <artifactId> Mp3-Arranger</artifactId>
+    <description>A Simple Mp3 File Arranger</description>
+    <packaging>jar</packaging>
+    <version>0.1-SNAPSHOT</version>
+    <name>mp3 arenger</name>
+    <url>https://github.com/iamaamir/Mp3-Arranger</url>
+    <licenses>
+	<license>
+	    <name>Apache License 2.0</name>
+	    <url>http://www.apache.org/licenses</url>
+	</license>
+    </licenses>
+
+    <issueManagement>
+	<system>github</system>
+	<url>https://github.com/iamaamir/Mp3-Arranger/issues</url>
+    </issueManagement>
+
+    <scm>
+	<connection>scm:git://github.com/iamaamir/Mp3-Arranger.git</connection>
+	<url>https://github.com/iamaamir/Mp3-Arranger</url>
+    </scm>
+    
+    <properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.mpatric</groupId>
+            <artifactId>mp3agic</artifactId>
+            <version>0.8.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+	<plugins>
+	    <!-- disable jar bundling as we use the assembly plugin for that which includes all deps -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+	    <!-- assembles one single runnable jar -->
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-assembly-plugin</artifactId>
+		<version>2.4</version>
+		<configuration>
+		    <descriptorRefs>
+			<descriptorRef>jar-with-dependencies</descriptorRef>
+		    </descriptorRefs>
+		    <archive>
+			<manifest>
+			    <mainClass>Mp3Arranger.GUI</mainClass>
+			</manifest>
+		    </archive>
+		</configuration>
+		<executions>
+		    <execution>
+			<phase>install</phase>
+			<goals>
+			    <goal>single</goal>
+			</goals>
+		    </execution>
+		    <execution>
+			<id>pkg</id>
+			<phase>package</phase>
+			<goals>
+			    <goal>single</goal>
+			</goals>
+		    </execution>
+		</executions>
+	    </plugin>
+	    <plugin>
+		<artifactId>maven-compiler-plugin</artifactId>
+		<version>3.1</version>
+		<configuration>
+		    <source>1.7</source>
+		    <target>1.7</target>
+		</configuration>
+	    </plugin>
+	</plugins>
+    </build>
+</project>
+
