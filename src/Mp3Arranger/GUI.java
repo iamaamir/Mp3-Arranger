@@ -123,7 +123,7 @@ public class GUI extends JPanel
                     }
                 });
                 t.start();
-                System.out.println(t.getName());
+                
                 
             }
         }
@@ -193,7 +193,7 @@ public class GUI extends JPanel
             }
         };
         runner.start();
-        System.out.println(runner.getName() + " From initWait");
+        
         
     }
     
