@@ -33,7 +33,7 @@ public class Actions {
                 @Override
                 public boolean accept(File dir, String name) {
                     
-                    return name.endsWith(".mp3");
+                    return name.toLowerCase().endsWith(".mp3");
                     
                 }
             });
@@ -43,8 +43,9 @@ public class Actions {
     }
     
     public static void SortFiles() {
+       String slash =  File.separator;
         
-        System.out.println("Total Found: " + Info.getMp3().length);
+        
         
         for (File mp3 : Info.getMp3()) {
             try {
@@ -56,7 +57,7 @@ public class Actions {
                         case "By Artist":
                             tag = idv2.getArtist();
                             tag = (tag == null) ? "Unknown Artist" : tag;
-                            dirPath = new File(Info.getTruePath() + "/" + tag);
+                            dirPath = new File(Info.getTruePath() + slash + tag);
                             if (!dirPath.exists()) {
                                 dirPath.mkdirs();
                                 
@@ -67,7 +68,7 @@ public class Actions {
                         case "By Album":
                             tag = idv2.getAlbum();
                             tag = (tag == null) ? "Unknown Album" : tag;
-                            dirPath = new File(Info.getTruePath() + "/" + tag);
+                            dirPath = new File(Info.getTruePath() + slash + tag);
                             if (!dirPath.exists()) {
                                 dirPath.mkdirs();
                                 
@@ -77,7 +78,7 @@ public class Actions {
                         case "By Genre":
                             tag = idv2.getGenreDescription();
                             tag = (tag == null) ? "Unknown Genere" : tag;
-                            dirPath = new File(Info.getTruePath() + "/" + tag);
+                            dirPath = new File(Info.getTruePath()+slash+tag);
                             if (!dirPath.exists()) {
                                 dirPath.mkdirs();
                                 
@@ -89,7 +90,7 @@ public class Actions {
                     }
                     
                 } else {
-                    dirPath = new File(Info.getTruePath() + "/Un-Defined Tag");
+                    dirPath = new File(Info.getTruePath() +slash+ "Un-Defined Tag");
                     if (!dirPath.exists()) {
                         dirPath.mkdir();
                     }
