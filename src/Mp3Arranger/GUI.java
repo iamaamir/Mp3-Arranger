@@ -16,7 +16,7 @@ import javax.swing.*;
 //            Info, Actions
 public class GUI extends JPanel
         implements ActionListener {
-    
+
     JTextField path;
     JButton browse = new JButton(java.util.ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
     JButton go = new JButton(java.util.ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("GO"));
@@ -25,11 +25,11 @@ public class GUI extends JPanel
     JProgressBar wait = new JProgressBar();
     JComboBox choice;
     String sortby;
-    String[] items = {"Select Sort", "By Artist", "By Album", "By Genre"};    
+    String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
 
     @SuppressWarnings({"LeakingThisInConstructor", "UseOfObsoleteCollectionType"})
     public GUI() {
-        
+
         super(new BorderLayout());
         choice = new JComboBox(items);
         go.setEnabled(true);
@@ -65,32 +65,37 @@ public class GUI extends JPanel
         pan3.add(creadit);
         add(pan3, BorderLayout.SOUTH);
         path.setEditable(false);
-        
+        Dimension pSize = wait.getPreferredSize();
+        pSize.width = 250;
+        wait.setPreferredSize(pSize);
+
     }
-    
+
     @Override
-    public void actionPerformed(ActionEvent e) {
+    @SuppressWarnings("NotifyNotInSynchronizedContext")
+    public synchronized void actionPerformed(ActionEvent e) {
+
         if (e.getSource() == browse) {
-            
+
             int val = folder.showDialog(GUI.this, "Select");
             if (val == 0) {
                 File source = folder.getSelectedFile();
-                
+
                 Info.setTruePath(source.getPath());
                 path.setText(source.getPath());
                 File mp3Files[] = Actions.FilterFiles(path.getText());
                 if (mp3Files.length != 0) {
                     Info.setMp3(mp3Files);
                 } else {
-                    
-                    JOptionPane.showMessageDialog(null, "Sorry I did not find any Mp3 File \n Select a folder containing .Mp3 Files", "Oops!!", 0);
+
+                    JOptionPane.showMessageDialog(null, "No Mp3 Found\n Select a folder containing .Mp3 Files", "Oops!!", 0);
                 }
             }
-            
+
         }
         if (e.getSource() == choice) {
             String uchoice = (String) choice.getSelectedItem();
-            if (uchoice.equals("Select Sort")) {
+            if (uchoice.equals("Sort By")) {
                 JOptionPane.showMessageDialog(null, "Choose a Valid Sort to Arrange Your Files", "Opps!", 0);
             } else {
                 sortby = (String) choice.getSelectedItem();
@@ -103,33 +108,37 @@ public class GUI extends JPanel
             JLabel msg = new JLabel("<html><body><b>Please Reselect the Path. </b></body></html>");
             msg.setIcon(icon);
             msg.setForeground(Color.darkGray);
-            
+
             if (Info.getMp3() == null) {
-                
+
                 JOptionPane.showMessageDialog(path, msg, "Oo!", JOptionPane.DEFAULT_OPTION);
             } else if (Info.getSortBy() == null) {
-                JOptionPane.showMessageDialog(null, "Select a Sort First!", "", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please Select a Sort to Proceed", "Error!", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                
-                Thread t = new Thread(new Runnable() {
-                    
+
+                Thread th = new Thread(new Runnable() {
+
                     @Override
+                    @SuppressWarnings("WaitWhileNotSynced")
                     public void run() {
-                        
+
                         initWait();
                         Actions.SortFiles();
                         wait.setVisible(false);
                         reEnableButtons();
                     }
                 });
-                t.start();
-                
-                
+
+                th.start();
+
+                System.out.println(th.getName());
+
             }
         }
     }
-    
+
     protected static void showGUI() {
+
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screen = tk.getScreenSize();
         int sheight = screen.height / 4;
@@ -149,9 +158,9 @@ public class GUI extends JPanel
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
     }
-    
-    void initWait() {
-        Info.setStatis(0);
+
+    synchronized void initWait() {
+
         go.setEnabled(false);
         browse.setEnabled(false);
         choice.setEnabled(false);
@@ -160,13 +169,11 @@ public class GUI extends JPanel
         wait.setMaximum(Info.getMp3().length);
         System.out.println(Info.getMp3().length);
         wait.setStringPainted(true);
-        
+
         Thread runner = new Thread() {
-            
-            @SuppressWarnings({"SleepWhileInLoop", "null"})
-            @Override
+
             public void run() {
-                
+
                 wait.setIndeterminate(true);
                 try {
                     Thread.sleep(1000);
@@ -174,45 +181,47 @@ public class GUI extends JPanel
                     System.out.println(ex.getCause());
                 }
                 wait.setIndeterminate(false);
-                
+
                 while (true) {
                     Runnable runme = new Runnable() {
                         @Override
                         public void run() {
+
                             wait.setValue(Info.getStatis());
-                        }                        
+
+                        }
                     };
                     SwingUtilities.invokeLater(runme);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                     }
-                    
+
                 }
-                
+
             }
         };
+
         runner.start();
-        
-        
+
     }
-    
+
     public static void main(String args[]) {
         SwingUtilities.invokeLater(new Runnable() {
-            
+
             @Override
             public void run() {
                 GUI.showGUI();
             }
-            
+
         });
-        
+
     }
-    
+
     public void reEnableButtons() {
         /*
-        Reenable al the butons after the Process  Completed
-        */
+         Reenable al the buttons after the Process  Completed
+         */
         go.setEnabled(true);
         browse.setEnabled(true);
         choice.setEnabled(true);
