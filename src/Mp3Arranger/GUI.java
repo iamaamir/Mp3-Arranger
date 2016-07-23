@@ -83,7 +83,7 @@ public class GUI extends JPanel implements ActionListener {
 
         if (e.getSource() == browse) {
 
-            int val = folder.showDialog(GUI.this, "Select Folder");
+            int val = folder.showDialog(GUI.this, "Select");
             if (val == 0) {
                 File source = folder.getSelectedFile();
 
@@ -93,7 +93,6 @@ public class GUI extends JPanel implements ActionListener {
                 if (mp3Files.length != 0) {
                     Info.setMp3(mp3Files);
                 } else {
-
                     JOptionPane.showMessageDialog(null, "No Mp3 Found\n Select a folder containing .Mp3 Files", "Oops!!", 0);
                 }
             }
@@ -116,7 +115,6 @@ public class GUI extends JPanel implements ActionListener {
             errorMsgLabel.setForeground(Color.darkGray);
 
             if (Info.getMp3() == null) {
-
                 JOptionPane.showMessageDialog(path, errorMsgLabel, "Oo!", JOptionPane.ERROR_MESSAGE);
             } else if (Info.getSortBy() == null) {
                 JOptionPane.showMessageDialog(null, "Please Select a Sort to Proceed", "Error!", JOptionPane.INFORMATION_MESSAGE);
@@ -172,14 +170,12 @@ public class GUI extends JPanel implements ActionListener {
         wait.setVisible(true);
         wait.setMinimum(0);
         wait.setMaximum(Info.getMp3().length);
-        System.out.println(Info.getMp3().length);
         wait.setStringPainted(true);
 
         Thread runner = new Thread() {
 
             @Override
             public void run() {
-
                 wait.setIndeterminate(true);
                 try {
                     Thread.sleep(1000);
@@ -192,9 +188,7 @@ public class GUI extends JPanel implements ActionListener {
                     Runnable runme = new Runnable() {
                         @Override
                         public void run() {
-
                             wait.setValue(Info.getStatis());
-
                         }
                     };
                     SwingUtilities.invokeLater(runme);
@@ -207,9 +201,7 @@ public class GUI extends JPanel implements ActionListener {
 
             }
         };
-
         runner.start();
-
     }
 
     public static void main(String args[]) {
@@ -219,15 +211,11 @@ public class GUI extends JPanel implements ActionListener {
             public void run() {
                 GUI.showGUI();
             }
-
         });
 
     }
 
     public void reEnableButtons() {
-        /*
-         Reenable al the buttons after the Process  Completed
-         */
         go.setEnabled(true);
         browse.setEnabled(true);
         choice.setEnabled(true);
