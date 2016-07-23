@@ -2,6 +2,7 @@ package Mp3Arranger;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -123,7 +124,6 @@ public class GUI extends JPanel implements ActionListener {
                 Thread th = new Thread(new Runnable() {
 
                     @Override
-                    @SuppressWarnings("WaitWhileNotSynced")
                     public void run() {
 
                         initWait();
@@ -157,7 +157,7 @@ public class GUI extends JPanel implements ActionListener {
         gui.setResizable(false);
         gui.setVisible(true);
         SwingUtilities.updateComponentTreeUI(gui);
-        URL favicon = GUI.class.getResource(java.util.ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
+        URL favicon = GUI.class.getResource(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
     }
