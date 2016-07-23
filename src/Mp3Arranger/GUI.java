@@ -8,18 +8,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ResourceBundle;
+
 import javax.swing.*;
 
 // Referenced classes of package Mp3Arranger:
 //            Info, Actions
-public class GUI extends JPanel
-        implements ActionListener {
+public class GUI extends JPanel implements ActionListener {
 
     JTextField path;
-    JButton browse = new JButton(java.util.ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
-    JButton go = new JButton(java.util.ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("GO"));
+    JButton browse = new JButton(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
+    JButton go = new JButton(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("GO"));
     JFileChooser folder;
     JLabel creadit;
     JProgressBar wait = new JProgressBar();
@@ -27,63 +26,70 @@ public class GUI extends JPanel
     String sortby;
     String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
 
-    @SuppressWarnings({"LeakingThisInConstructor", "UseOfObsoleteCollectionType"})
     public GUI() {
 
         super(new BorderLayout());
         choice = new JComboBox(items);
-        go.setEnabled(true);
-        browse.setEnabled(true);
-        choice.setEnabled(true);
+
         try {
             UIManager.setLookAndFeel(new javax.swing.plaf.nimbus.NimbusLookAndFeel());
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
-        path = new JTextField(java.util.ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("PATH"), 20);
-        JPanel pan1 = new JPanel();
-        pan1.add(path);
-        add(pan1, BorderLayout.PAGE_START);
+        path = new JTextField(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("PATH"), 20);
+        JPanel pane = new JPanel();
+        pane.add(path);
+        add(pane, BorderLayout.PAGE_START);
+        
         browse.setMnemonic('b');
         browse.addActionListener(this);
+        
         choice.setEditable(false);
         choice.addActionListener(this);
+        
         go.setMnemonic('g');
-        JPanel pan2 = new JPanel();
-        pan2.add(browse);
-        pan2.add(choice);
-        pan2.add(go);
-        add(pan2, BorderLayout.CENTER);
+        
+        JPanel pane2 = new JPanel();
+        pane2.add(browse);
+        pane2.add(choice);
+        pane2.add(go);
+        
+        add(pane2, BorderLayout.CENTER);
+        
         go.addActionListener(this);
+        
         folder = new JFileChooser();
         folder.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         folder.setMultiSelectionEnabled(false);
+        
         wait.setVisible(false);
-        JPanel pan3 = new JPanel();
-        pan3.add(wait);
+        
+        JPanel pane3 = new JPanel();
+        
+        pane3.add(wait);
         creadit = new JLabel("Copyright to Aamir khan 2014");
-        pan3.add(creadit);
-        add(pan3, BorderLayout.SOUTH);
+        pane3.add(creadit);
+        add(pane3, BorderLayout.SOUTH);
+        
         path.setEditable(false);
-        Dimension pSize = wait.getPreferredSize();
-        pSize.width = 250;
-        wait.setPreferredSize(pSize);
+        Dimension pathPreferredSize = wait.getPreferredSize();
+        pathPreferredSize.width = 250;
+        wait.setPreferredSize(pathPreferredSize);
 
     }
 
     @Override
-    @SuppressWarnings("NotifyNotInSynchronizedContext")
-    public  void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == browse) {
 
-            int val = folder.showDialog(GUI.this, "Select");
+            int val = folder.showDialog(GUI.this, "Select Folder");
             if (val == 0) {
                 File source = folder.getSelectedFile();
 
                 Info.setTruePath(source.getPath());
                 path.setText(source.getPath());
-                File mp3Files[] = Actions.FilterFiles(path.getText());
+                File mp3Files[] = Actions.getMp3Files(path.getText());
                 if (mp3Files.length != 0) {
                     Info.setMp3(mp3Files);
                 } else {
@@ -103,15 +109,15 @@ public class GUI extends JPanel
             }
         }
         if (e.getSource() == go) {
-            URL attachimg = GUI.class.getResource("Img/error_go.png");
-            ImageIcon icon = new ImageIcon(attachimg);
-            JLabel msg = new JLabel("<html><body><b>Please Reselect the Path. </b></body></html>");
-            msg.setIcon(icon);
-            msg.setForeground(Color.darkGray);
+            final URL ERROR_IMG = GUI.class.getResource("Img/error_go.png");
+            final ImageIcon icon = new ImageIcon(ERROR_IMG);
+            JLabel errorMsgLabel = new JLabel("<html><body><b>Please Reselect the Path. </b></body></html>");
+            errorMsgLabel.setIcon(icon);
+            errorMsgLabel.setForeground(Color.darkGray);
 
             if (Info.getMp3() == null) {
 
-                JOptionPane.showMessageDialog(path, msg, "Oo!", JOptionPane.DEFAULT_OPTION);
+                JOptionPane.showMessageDialog(path, errorMsgLabel, "Oo!", JOptionPane.ERROR_MESSAGE);
             } else if (Info.getSortBy() == null) {
                 JOptionPane.showMessageDialog(null, "Please Select a Sort to Proceed", "Error!", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -158,7 +164,7 @@ public class GUI extends JPanel
         gui.setIconImage(icon.getImage());
     }
 
-     void initWait() {
+    void initWait() {
 
         go.setEnabled(false);
         browse.setEnabled(false);
