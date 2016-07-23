@@ -39,7 +39,7 @@ public class GUI extends JPanel implements ActionListener {
         path = new JTextField(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("PATH"), 20);
         JPanel pane = new JPanel();
         pane.add(path);
-        add(pane, BorderLayout.PAGE_START);
+        super.add(pane, BorderLayout.PAGE_START);
         
         browse.setMnemonic('b');
         browse.addActionListener(this);
@@ -54,7 +54,7 @@ public class GUI extends JPanel implements ActionListener {
         pane2.add(choice);
         pane2.add(go);
         
-        add(pane2, BorderLayout.CENTER);
+        super.add(pane2, BorderLayout.CENTER);
         
         go.addActionListener(this);
         
@@ -69,7 +69,7 @@ public class GUI extends JPanel implements ActionListener {
         pane3.add(wait);
         creadit = new JLabel("Copyright to Aamir khan 2014");
         pane3.add(creadit);
-        add(pane3, BorderLayout.SOUTH);
+        super.add(pane3, BorderLayout.SOUTH);
         
         path.setEditable(false);
         Dimension pathPreferredSize = wait.getPreferredSize();
