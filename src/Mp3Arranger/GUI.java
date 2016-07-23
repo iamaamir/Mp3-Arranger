@@ -73,7 +73,7 @@ public class GUI extends JPanel
 
     @Override
     @SuppressWarnings("NotifyNotInSynchronizedContext")
-    public synchronized void actionPerformed(ActionEvent e) {
+    public  void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == browse) {
 
@@ -152,14 +152,13 @@ public class GUI extends JPanel
         gui.setContentPane(newContentPane);
         gui.setResizable(false);
         gui.setVisible(true);
-//        gui.pack();
         SwingUtilities.updateComponentTreeUI(gui);
         URL favicon = GUI.class.getResource(java.util.ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
     }
 
-    synchronized void initWait() {
+     void initWait() {
 
         go.setEnabled(false);
         browse.setEnabled(false);
@@ -172,6 +171,7 @@ public class GUI extends JPanel
 
         Thread runner = new Thread() {
 
+            @Override
             public void run() {
 
                 wait.setIndeterminate(true);
