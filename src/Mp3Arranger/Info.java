@@ -12,7 +12,7 @@ public class Info {
     private static File[] mp3;
     private static String TruePath;
     private static File fileSource;
-    private static int statis;
+    private  int statis;
 
     public static void setFileSource(File fileSource) {
         Info.fileSource = fileSource;
@@ -48,11 +48,11 @@ public class Info {
         Info.TruePath = TruePath;
     }
 
-    public static void setStatis(int statis) {
-        Info.statis = statis;
+    public  void setStatis(int statis) {
+        this.statis = statis;
     }
 
-    public static int getStatis() {
+    public  int getStatis() {
         return statis;
     }
 
