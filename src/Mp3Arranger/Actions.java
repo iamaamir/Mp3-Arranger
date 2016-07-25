@@ -16,9 +16,7 @@ import javax.swing.ImageIcon;
  */
 public class Actions {
 
-    
-    
-    private  int count = 0;
+    private int count = 0;
     static final URL EMO_IMG_URL = GUI.class.getResource("Img/emoticon_smile.png");
     static final ImageIcon EMO_ICON = new ImageIcon(EMO_IMG_URL);
 
@@ -39,8 +37,8 @@ public class Actions {
         return null;
     }
 
-    public  int CopyData(String song, String destination) throws IOException {
-        System.out.println(destination);
+    public int CopyData(String song, String destination) throws IOException {
+
         long start = System.currentTimeMillis();
 
         InputStream istream = null;
@@ -65,18 +63,16 @@ public class Actions {
 
             float fsize = bfile.length() / (1024 * 1024f);
             System.out.println("Total size : " + fsize + " MB");
-//            System.out.println(Math.round(fsize * 100.0) / 100.0);
 
-            boolean delete = afile.delete();
-            System.out.println(delete);
+            afile.delete();
 
             long end = System.currentTimeMillis();
-            long milsec;
-            milsec = end - start;
+
+            final long milsec = (end - start);
             System.out.println("Copied Successs full");
             System.out.println("Copied in " + (milsec / 1000) + " seconds");
             //System.out.println("Copied in "+ (milsec*0.001)+ " seconds");
-            
+
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
