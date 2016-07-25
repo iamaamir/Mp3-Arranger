@@ -11,11 +11,6 @@ public class Info {
     private static String sortBy;
     private static File[] mp3;
     private static String TruePath;
-    private static File fileSource;
-
-    public static void setFileSource(File fileSource) {Info.fileSource = fileSource;}
-
-    public static File getFileSource() {return fileSource;}
 
     public static void setSortBy(String sortBy) {Info.sortBy = sortBy;}
 
