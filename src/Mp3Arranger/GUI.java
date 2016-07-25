@@ -107,7 +107,7 @@ public class GUI extends JPanel implements ActionListener {
 
         }
         if (e.getSource() == choice) {
-            String sortBy = (String) choice.getSelectedItem();
+            String sortBy = choice.getSelectedItem().toString();
             if (sortBy.equals("Sort By")) {
                 JOptionPane.showMessageDialog(null, "Choose a Valid Sort to Arrange Your Files", "Opps!", 0);
             } else {
@@ -130,7 +130,7 @@ public class GUI extends JPanel implements ActionListener {
             if (mp3Files.length == 0) {
                 JOptionPane.showMessageDialog(path, errorMsgLabel, "Oo!", JOptionPane.INFORMATION_MESSAGE);
             } else if (Info.getSortBy() == null) {
-                JOptionPane.showMessageDialog(null, "Please Select a Sort to Proceed", "Error!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please Select a Sort type to Proceed", "Error!", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 Info.setMp3(mp3Files);
                 disableButtons(true);
