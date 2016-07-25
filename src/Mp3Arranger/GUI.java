@@ -77,7 +77,7 @@ public class GUI extends JPanel implements ActionListener {
 
         bottomPane.add(wait);
 
-        creadit = new JLabel("Copyright to Aamir khan " + getCurrentYear());
+        creadit = new JLabel("Copyright to Aamir khan " + Actions.getCurrentYear());
         bottomPane.add(creadit);
         super.add(bottomPane, BorderLayout.SOUTH);
 
@@ -134,6 +134,7 @@ public class GUI extends JPanel implements ActionListener {
             } else {
                 Info.setMp3(mp3Files);
                 disableButtons(true);
+                Info.setPath(path.getText());
                 runTask();
             }
         }
@@ -290,20 +291,6 @@ public class GUI extends JPanel implements ActionListener {
 
     }
 
-    private String getCurrentYear() {
-        boolean flag = false;
-        InputStream connection;
-        try {
-            System.out.println("Opening Connection");
-            connection = new URL("http://www.timeapi.org/utc/now").openStream();
-            Scanner year = new Scanner(connection);
-            return year.useDelimiter("\\Z").next().substring(0, 4);
-        } catch (IOException ex) {
-            System.err.println("Connection failed getting system date");
-            int year = Calendar.getInstance().get(Calendar.YEAR);
-            return (year < 2016) ? "2016" : String.valueOf(year);
-        }
-
-    }
+    
 
 }
