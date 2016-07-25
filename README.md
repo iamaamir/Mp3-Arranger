@@ -17,7 +17,7 @@ It Simply Reads the Tags of the Files And Arrange them on the Basis of those Tag
 You just need to have [Java 1.7](http://java.com) or later installed on your machine
 
 ###How to Install ?
-There is no need to Go Throught any Installation Wizard Simply [Download](http://mp3a.sourceforge.net/) and Run it.
+Simply [Download](http://mp3a.sourceforge.net/) it and Run it.
 
 
 ####Build with maven like this:
