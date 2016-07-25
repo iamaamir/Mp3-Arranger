@@ -3,7 +3,7 @@ Mp3-Arranger
 
 A Simple Mp3 File Arranger 
 
-##How it Works?
+###How it Works?
 It Simply Reads the Tags of the Files And Arrange them on the Basis of those Tags..
 
 
@@ -16,7 +16,7 @@ It Simply Reads the Tags of the Files And Arrange them on the Basis of those Tag
 ###Pre Requirements
 You just need to have [Java 1.7](http://java.com) or later installed on your machine
 
-###How to Install
+###How to Install ?
 There is no need to Go Throught any Installation Wizard Simply [Download](http://mp3a.sourceforge.net/) and Run it.
 
 
