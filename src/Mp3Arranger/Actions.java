@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Scanner;
 import javax.swing.ImageIcon;
 
 /**
@@ -78,6 +80,25 @@ public class Actions {
         }
         return count++;
 
+    }
+
+    public static String getCurrentYear() {
+        InputStream connection;
+        try {
+            System.out.println("Opening Connection");
+            connection = new URL("http://www.timeapi.org/utc/now").openStream();
+            Scanner year = new Scanner(connection);
+            return year.useDelimiter("\\Z").next().substring(0, 4);
+        } catch (IOException ex) {
+            System.err.println("Connection failed getting system date");
+            return getSystemYear();
+        }
+
+    }
+
+    private static String getSystemYear() {
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        return (year < 2016) ? "2016" : String.valueOf(year);
     }
 
 }
