@@ -11,10 +11,20 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.Calendar;
 import java.util.ResourceBundle;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
@@ -66,11 +76,11 @@ public class GUI extends JPanel implements ActionListener {
         wait.setVisible(false);
 
         bottomPane.add(wait);
-        creadit = new JLabel("Copyright to Aamir khan 2014");
+
+        creadit = new JLabel("Copyright to Aamir khan " + getCurrentYear());
         bottomPane.add(creadit);
         super.add(bottomPane, BorderLayout.SOUTH);
 
-        path.setEditable(false);
         Dimension pathPreferredSize = wait.getPreferredSize();
         pathPreferredSize.width = 250;
         wait.setPreferredSize(pathPreferredSize);
@@ -91,20 +101,13 @@ public class GUI extends JPanel implements ActionListener {
             int val = folder.showDialog(GUI.this, "Select");
             if (val == 0) {
                 File source = folder.getSelectedFile();
-
-                Info.setTruePath(source.getPath());
+                Info.setPath(source.getPath());
                 path.setText(source.getPath());
-                File mp3Files[] = Actions.findMp3Files(path.getText());
-                if (mp3Files.length != 0) {
-                    Info.setMp3(mp3Files);
-                } else {
-                    JOptionPane.showMessageDialog(null, "No Mp3 Found\n Select a folder containing .Mp3 Files", "Oops!!", 0);
-                }
             }
 
         }
         if (e.getSource() == choice) {
-            String sortBy = (String)choice.getSelectedItem();
+            String sortBy = (String) choice.getSelectedItem();
             if (sortBy.equals("Sort By")) {
                 JOptionPane.showMessageDialog(null, "Choose a Valid Sort to Arrange Your Files", "Opps!", 0);
             } else {
@@ -116,15 +119,20 @@ public class GUI extends JPanel implements ActionListener {
             final URL ERROR_IMG = GUI.class.getResource("Img/error_go.png");
             final ImageIcon icon = new ImageIcon(ERROR_IMG);
 
-            JLabel errorMsgLabel = new JLabel("<html><body><b>Please Reselect the Path. </b></body></html>");
+            JLabel errorMsgLabel = new JLabel("<html><body><b>"
+                    + "No Mp3 Found "
+                    + "Please Reselect the folder containing .Mp3 Files"
+                    + "</b></body></html>");
             errorMsgLabel.setIcon(icon);
             errorMsgLabel.setForeground(Color.darkGray);
 
-            if (Info.getMp3() == null) {
-                JOptionPane.showMessageDialog(path, errorMsgLabel, "Oo!", JOptionPane.ERROR_MESSAGE);
+            File mp3Files[] = Actions.findMp3Files(path.getText());
+            if (mp3Files.length == 0) {
+                JOptionPane.showMessageDialog(path, errorMsgLabel, "Oo!", JOptionPane.INFORMATION_MESSAGE);
             } else if (Info.getSortBy() == null) {
                 JOptionPane.showMessageDialog(null, "Please Select a Sort to Proceed", "Error!", JOptionPane.INFORMATION_MESSAGE);
             } else {
+                Info.setMp3(mp3Files);
                 disableButtons(true);
                 runTask();
             }
@@ -164,7 +172,7 @@ public class GUI extends JPanel implements ActionListener {
                                 case "By Artist":
                                     tag = idv2.getArtist();
                                     tag = (tag == null) ? "Unknown Artist" : tag;
-                                    dirPath = new File(Info.getTruePath() + SLASH + tag);
+                                    dirPath = new File(Info.getPath() + SLASH + tag);
                                     if (!dirPath.exists()) {
                                         dirPath.mkdirs();
 
@@ -175,7 +183,7 @@ public class GUI extends JPanel implements ActionListener {
                                 case "By Album":
                                     tag = idv2.getAlbum();
                                     tag = (tag == null) ? "Unknown Album" : tag;
-                                    dirPath = new File(Info.getTruePath() + SLASH + tag);
+                                    dirPath = new File(Info.getPath() + SLASH + tag);
                                     if (!dirPath.exists()) {
                                         dirPath.mkdirs();
 
@@ -186,7 +194,7 @@ public class GUI extends JPanel implements ActionListener {
                                 case "By Genre":
                                     tag = idv2.getGenreDescription();
                                     tag = (tag == null) ? "Unknown Genere" : tag;
-                                    dirPath = new File(Info.getTruePath() + SLASH + tag);
+                                    dirPath = new File(Info.getPath() + SLASH + tag);
                                     if (!dirPath.exists()) {
                                         dirPath.mkdirs();
 
@@ -199,7 +207,7 @@ public class GUI extends JPanel implements ActionListener {
                             }
 
                         } else {
-                            dirPath = new File(Info.getTruePath() + SLASH + "Un-Defined Tag");
+                            dirPath = new File(Info.getPath() + SLASH + "Un-Defined Tag");
                             if (!dirPath.exists()) {
                                 dirPath.mkdir();
                             }
@@ -281,4 +289,21 @@ public class GUI extends JPanel implements ActionListener {
         });
 
     }
+
+    private String getCurrentYear() {
+        boolean flag = false;
+        InputStream connection;
+        try {
+            System.out.println("Opening Connection");
+            connection = new URL("http://www.timeapi.org/utc/now").openStream();
+            Scanner year = new Scanner(connection);
+            return year.useDelimiter("\\Z").next().substring(0, 4);
+        } catch (IOException ex) {
+            System.err.println("Connection failed getting system date");
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            return (year < 2016) ? "2016" : String.valueOf(year);
+        }
+
+    }
+
 }
