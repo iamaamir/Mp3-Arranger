@@ -1,7 +1,9 @@
 Mp3-Arranger
 ============
 
-A Simple Mp3 File Arranger 
+A Simple Mp3 File Arranger
+
+![Main window](https://github.com/iamaamir/Mp3-Arranger/blob/master/src/screen%20shots/wip.png?raw=true) 
 
 ###How it Works?
 It Simply Reads the Tags of the Files And Arrange them on the Basis of those Tags..
