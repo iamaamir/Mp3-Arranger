@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Scanner;
 import javax.swing.ImageIcon;
 
 /**
@@ -52,8 +51,8 @@ public class Actions {
             istream = new FileInputStream(afile);
             ostream = new FileOutputStream(bfile);
             byte[] cfile = new byte[1024];
-            int len = 0;
-            while ((len = istream.read(cfile)) > 0) {
+
+            while ((istream.read(cfile)) > 0) {
                 ostream.write(cfile);
                 ostream.flush();
             }
@@ -101,11 +100,11 @@ public class Actions {
         return (year < 2016) ? "2016" : String.valueOf(year);
     }
 
-    private static void spit(String obj) {
+    void spit(String obj) {
         System.out.println(obj);
     }
 
-    private static void spitError(String obj) {
+    void spitError(String obj) {
         System.err.println(obj);
     }
 }
