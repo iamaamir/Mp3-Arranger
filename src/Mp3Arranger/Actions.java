@@ -39,6 +39,7 @@ public class Actions {
         return null;
     }
 
+    @SuppressWarnings("null")
     public int CopyData(String song, String destination) throws IOException {
 
         long start = System.currentTimeMillis();
@@ -56,7 +57,6 @@ public class Actions {
                 ostream.write(cfile);
                 ostream.flush();
             }
-
             istream.close();
             ostream.close();
 
@@ -65,7 +65,7 @@ public class Actions {
 
             float fsize = bfile.length() / (1024 * 1024f);
             spit("Total size : " + fsize + " MB");
-            
+
 //Delete the file after copying
             afile.delete();
 
@@ -80,32 +80,32 @@ public class Actions {
         return count++;
 
     }
+//
+//    public static String getCurrentYear() {
+//        InputStream connection;
+//        try {
+//            spit("Opening Connection");
+//            connection = new URL("http://www.timeapi.org/utc/now").openStream();
+//            Scanner year = new Scanner(connection);
+//            return year.useDelimiter("\\Z").next().substring(0, 4);
+//        } catch (IOException ex) {
+//            spitError(ex.getLocalizedMessage());
+////            spitError("Connection failed getting system date");
+//            return getSystemYear();
+//        }
+//
+//    }
 
-    public static String getCurrentYear() {
-        InputStream connection;
-        try {
-            spit("Opening Connection");
-            connection = new URL("http://www.timeapi.org/utc/now").openStream();
-            Scanner year = new Scanner(connection);
-            return year.useDelimiter("\\Z").next().substring(0, 4);
-        } catch (IOException ex) {
-            spitError("Connection failed getting system date");
-            return getSystemYear();
-        }
-
-    }
-
-    private static String getSystemYear() {
+    static String getSystemYear() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         return (year < 2016) ? "2016" : String.valueOf(year);
     }
-    
-    
-    private static void spit(String obj){
+
+    private static void spit(String obj) {
         System.out.println(obj);
     }
-    
-    private static void spitError(String obj){
+
+    private static void spitError(String obj) {
         System.err.println(obj);
     }
 }
