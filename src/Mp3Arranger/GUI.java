@@ -148,11 +148,10 @@ public class GUI extends JPanel implements ActionListener {
     }
 
     private void runTask() {
-        SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
+        SwingWorker<Void, Void> task;
+        task = new SwingWorker<Void, Void>() {
             private String tag;
-            private File dirPath;
-            Actions dataHandler = new Actions();
-            int tracker;
+            private final Actions dataHandler = new Actions();
 
             @Override
             protected Void doInBackground() throws Exception {
@@ -160,8 +159,6 @@ public class GUI extends JPanel implements ActionListener {
                 wait.setMinimum(0);
                 wait.setMaximum(Info.getMp3().length);
                 wait.setStringPainted(true);
-
-                String SLASH = File.separator;
 
                 for (File mp3 : Info.getMp3()) {
                     try {
@@ -173,47 +170,24 @@ public class GUI extends JPanel implements ActionListener {
                                 case "By Artist":
                                     tag = idv2.getArtist();
                                     tag = (tag == null) ? "Unknown Artist" : tag;
-                                    dirPath = new File(Info.getPath() + SLASH + tag);
-                                    if (!dirPath.exists()) {
-                                        dirPath.mkdirs();
-
-                                    }
-                                    tracker = dataHandler.CopyData(mp3.getAbsolutePath(), dirPath.toString());
-                                    wait.setValue(tracker);
+                                    processMp3(mp3, tag);
                                     break;
                                 case "By Album":
                                     tag = idv2.getAlbum();
                                     tag = (tag == null) ? "Unknown Album" : tag;
-                                    dirPath = new File(Info.getPath() + SLASH + tag);
-                                    if (!dirPath.exists()) {
-                                        dirPath.mkdirs();
-
-                                    }
-                                    tracker = dataHandler.CopyData(mp3.getAbsolutePath(), dirPath.toString());
-                                    wait.setValue(tracker);
+                                    processMp3(mp3, tag);
                                     break;
                                 case "By Genre":
                                     tag = idv2.getGenreDescription();
                                     tag = (tag == null) ? "Unknown Genere" : tag;
-                                    dirPath = new File(Info.getPath() + SLASH + tag);
-                                    if (!dirPath.exists()) {
-                                        dirPath.mkdirs();
-
-                                    }
-                                    tracker = dataHandler.CopyData(mp3.getAbsolutePath(), dirPath.toString());
-                                    wait.setValue(tracker);
+                                    processMp3(mp3, tag);
                                     break;
                                 default:
                                     System.err.println("Unknow Sort");
                             }
 
                         } else {
-                            dirPath = new File(Info.getPath() + SLASH + "Un-Defined Tag");
-                            if (!dirPath.exists()) {
-                                dirPath.mkdir();
-                            }
-                            tracker = dataHandler.CopyData(mp3.getAbsolutePath(), dirPath.toString());
-                            wait.setValue(tracker);
+                            processMp3(mp3, "Un-Defined Tag");
                         }
 
                     } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
@@ -236,6 +210,15 @@ public class GUI extends JPanel implements ActionListener {
                 Info.setMp3(null);
                 wait.setVisible(false);
                 disableButtons(false);
+            }
+
+            private void processMp3(File mp3, String tag) throws IOException {
+                File dirPath = new File(Info.getPath() + File.separator + tag);
+                if (!dirPath.exists()) {
+                    dirPath.mkdirs();
+                }
+                int tracker = dataHandler.CopyData(mp3.getAbsolutePath(), dirPath.toString());
+                wait.setValue(tracker);
             }
 
         };
@@ -290,7 +273,5 @@ public class GUI extends JPanel implements ActionListener {
         });
 
     }
-
-    
 
 }
