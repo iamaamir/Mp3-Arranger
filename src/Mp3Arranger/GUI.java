@@ -33,7 +33,7 @@ public class GUI extends JPanel implements ActionListener {
     JFileChooser folder;
     JLabel creadit;
     JProgressBar wait = new JProgressBar();
-    JComboBox choice;
+    JComboBox<String> choice;
     String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
 
     public GUI() {
@@ -250,7 +250,7 @@ public class GUI extends JPanel implements ActionListener {
         this.gui = new JFrame("Mp3 Arranger");
         this.go = new JButton(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("GO"));
         this.browse = new JButton(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
-        this.choice = new JComboBox(items);
+        this.choice = new JComboBox<>(items);
         this.buttonsPane = new JPanel();
         this.path = new JTextField(System.getProperty("user.home") + File.separatorChar + "Music", 20);
         this.pane = new JPanel();
