@@ -77,7 +77,7 @@ public class GUI extends JPanel implements ActionListener {
 
         bottomPane.add(wait);
 
-        creadit = new JLabel("Copyright to Aamir khan " + Actions.getCurrentYear());
+        creadit = new JLabel("Copyright to Aamir khan " + Actions.getSystemYear());
         bottomPane.add(creadit);
         super.add(bottomPane, BorderLayout.SOUTH);
 
@@ -166,24 +166,29 @@ public class GUI extends JPanel implements ActionListener {
 
                         if (song.hasId3v2Tag()) {
                             ID3v2 idv2 = song.getId3v2Tag();
+
                             switch (Info.getSortBy()) {
+
                                 case "By Artist":
                                     tag = idv2.getArtist();
                                     tag = (tag == null) ? "Unknown Artist" : tag;
                                     processMp3(mp3, tag);
                                     break;
+
                                 case "By Album":
                                     tag = idv2.getAlbum();
                                     tag = (tag == null) ? "Unknown Album" : tag;
                                     processMp3(mp3, tag);
                                     break;
+
                                 case "By Genre":
                                     tag = idv2.getGenreDescription();
                                     tag = (tag == null) ? "Unknown Genere" : tag;
                                     processMp3(mp3, tag);
                                     break;
+
                                 default:
-                                    System.err.println("Unknow Sort");
+                                    dataHandler.spitError("Unknow Sort");
                             }
 
                         } else {
