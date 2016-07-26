@@ -60,23 +60,22 @@ public class Actions {
             istream.close();
             ostream.close();
 
-            System.out.println("Name : " + bfile.getName());
-            System.out.println(afile.getName() + " Copied into: " + bfile.getParent());
+            spit("Name : " + bfile.getName());
+            spit(afile.getName() + " Copied into: " + bfile.getParent());
 
             float fsize = bfile.length() / (1024 * 1024f);
-            System.out.println("Total size : " + fsize + " MB");
-
+            spit("Total size : " + fsize + " MB");
+            
+//Delete the file after copying
             afile.delete();
 
             long end = System.currentTimeMillis();
 
-            final long milsec = (end - start);
-            System.out.println("Copied Successs full");
-            System.out.println("Copied in " + (milsec / 1000) + " seconds");
-            //System.out.println("Copied in "+ (milsec*0.001)+ " seconds");
+            spit("Copied Successs full");
+            spit("Copied in " + ((end - start) / 1000) + " seconds");
 
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+            spitError(ex.getMessage());
         }
         return count++;
 
@@ -85,12 +84,12 @@ public class Actions {
     public static String getCurrentYear() {
         InputStream connection;
         try {
-            System.out.println("Opening Connection");
+            spit("Opening Connection");
             connection = new URL("http://www.timeapi.org/utc/now").openStream();
             Scanner year = new Scanner(connection);
             return year.useDelimiter("\\Z").next().substring(0, 4);
         } catch (IOException ex) {
-            System.err.println("Connection failed getting system date");
+            spitError("Connection failed getting system date");
             return getSystemYear();
         }
 
@@ -100,5 +99,13 @@ public class Actions {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         return (year < 2016) ? "2016" : String.valueOf(year);
     }
-
+    
+    
+    private static void spit(String obj){
+        System.out.println(obj);
+    }
+    
+    private static void spitError(String obj){
+        System.err.println(obj);
+    }
 }
