@@ -7,9 +7,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.Calendar;
-import javax.swing.ImageIcon;
 
 /**
  *
@@ -18,10 +16,9 @@ import javax.swing.ImageIcon;
 public class Actions {
 
     private int count = 0;
-    static final URL EMO_IMG_URL = GUI.class.getResource("Img/emoticon_smile.png");
-    static final ImageIcon EMO_ICON = new ImageIcon(EMO_IMG_URL);
 
-    public static File[] findMp3Files(String folderPath) {
+
+    public  File[] findMp3Files(String folderPath) {
         File fpath = new File(folderPath);
         if (fpath.isDirectory()) {
             File[] mp3files = fpath.listFiles(new FilenameFilter() {
