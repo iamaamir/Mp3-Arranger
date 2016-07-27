@@ -24,9 +24,6 @@ public class GUI extends JPanel implements ActionListener {
 
     private int SCREEN_HEIGHT;
     private int SCREEN_WIDTH;
-    private static final URL EMO_IMG_URL = GUI.class.getResource("Img/emoticon_smile.png");
-    private static final ImageIcon EMO_ICON = new ImageIcon(EMO_IMG_URL);
-    private  Actions dataHandler = new Actions();
 
     JPanel pane, buttonsPane, bottomPane;
     JTextField path;
@@ -119,7 +116,7 @@ public class GUI extends JPanel implements ActionListener {
             errorMsgLabel.setIcon(icon);
             errorMsgLabel.setForeground(Color.darkGray);
 
-            File mp3Files[] = dataHandler.findMp3Files(path.getText());
+            File mp3Files[] = Actions.findMp3Files(path.getText());
             if (mp3Files.length == 0) {
                 JOptionPane.showMessageDialog(path, errorMsgLabel, "Oo!", JOptionPane.INFORMATION_MESSAGE);
             } else if (Info.getSortBy() == null) {
@@ -144,6 +141,7 @@ public class GUI extends JPanel implements ActionListener {
         SwingWorker<Void, Void> task;
         task = new SwingWorker<Void, Void>() {
             private String tag;
+            private final Actions dataHandler = new Actions();
 
             @Override
             protected Void doInBackground() throws Exception {
@@ -194,7 +192,7 @@ public class GUI extends JPanel implements ActionListener {
                 }
 
                 JLabel taskdoneMsg = new JLabel();
-                taskdoneMsg.setIcon(EMO_ICON);
+                taskdoneMsg.setIcon(Actions.EMO_ICON);
                 taskdoneMsg.setText("<html><body><h3 style = color:Green;>Task Completed Successfully </h3></body></html>");
 
                 JOptionPane.showMessageDialog(null, taskdoneMsg, "Done", JOptionPane.PLAIN_MESSAGE);
@@ -206,7 +204,6 @@ public class GUI extends JPanel implements ActionListener {
             protected void done() {
                 Info.setMp3(null);
                 wait.setVisible(false);
-                wait.setValue(0);
                 disableButtons(false);
             }
 
@@ -225,32 +222,6 @@ public class GUI extends JPanel implements ActionListener {
     }
     //runTask end here
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     void showGUI() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screen = tk.getScreenSize();
