@@ -1,5 +1,7 @@
 package Mp3Arranger;
 
+import static Mp3Arranger.Util.getSystemYear;
+import static Mp3Arranger.Util.spitError;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
@@ -67,7 +69,7 @@ public class GUI extends JPanel implements ActionListener {
 
         bottomPane.add(wait);
 
-        credit = new JLabel("Copyright to Aamir khan " + Actions.getSystemYear());
+        credit = new JLabel("Copyright to Aamir khan " + getSystemYear());
         bottomPane.add(credit);
         super.add(bottomPane, BorderLayout.SOUTH);
 
@@ -78,7 +80,7 @@ public class GUI extends JPanel implements ActionListener {
         try {
             UIManager.setLookAndFeel(new javax.swing.plaf.nimbus.NimbusLookAndFeel());
         } catch (UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
+            spitError(ex.toString());
         }
 
     }
@@ -178,7 +180,7 @@ public class GUI extends JPanel implements ActionListener {
                                     break;
 
                                 default:
-                                    dataHandler.spitError("Unknow Sort");
+                                    spitError("Unknow Sort");
                             }
 
                         } else {
