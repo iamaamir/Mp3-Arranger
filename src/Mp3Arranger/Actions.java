@@ -1,5 +1,7 @@
 package Mp3Arranger;
 
+import static Mp3Arranger.Util.spit;
+import static Mp3Arranger.Util.spitError;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,8 +9,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Calendar;
-import javax.swing.ImageIcon;
 
 /**
  *
@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
 public class Actions {
 
     private int count = 0;
-    static final ImageIcon EMO_ICON = new ImageIcon(GUI.class.getResource("Img/emoticon_smile.png"));
+    
 
     public static File[] findMp3Files(String folderPath) {
         File folder = new File(folderPath);
@@ -90,16 +90,5 @@ public class Actions {
 //
 //    }
 
-    static String getSystemYear() {
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        return (year < 2016) ? "2016" : String.valueOf(year);
-    }
 
-    void spit(String obj) {
-        System.out.println(obj);
-    }
-
-    void spitError(String obj) {
-        System.err.println(obj);
-    }
 }
