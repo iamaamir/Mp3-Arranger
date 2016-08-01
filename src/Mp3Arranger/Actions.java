@@ -7,7 +7,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.Calendar;
 import javax.swing.ImageIcon;
 
@@ -18,19 +17,15 @@ import javax.swing.ImageIcon;
 public class Actions {
 
     private int count = 0;
-    static final URL EMO_IMG_URL = GUI.class.getResource("Img/emoticon_smile.png");
-    static final ImageIcon EMO_ICON = new ImageIcon(EMO_IMG_URL);
+    static final ImageIcon EMO_ICON = new ImageIcon(GUI.class.getResource("Img/emoticon_smile.png"));
 
     public static File[] findMp3Files(String folderPath) {
-        File fpath = new File(folderPath);
-        if (fpath.isDirectory()) {
-            File[] mp3files = fpath.listFiles(new FilenameFilter() {
-
+        File folder = new File(folderPath);
+        if (folder.isDirectory()) {
+            File[] mp3files = folder.listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
-
                     return name.toLowerCase().endsWith(".mp3");
-
                 }
             });
             return mp3files;
@@ -41,7 +36,7 @@ public class Actions {
     @SuppressWarnings("null")
     public int CopyData(String song, String destination) throws IOException {
 
-        long start = System.currentTimeMillis();
+        final long START_TIME = System.currentTimeMillis();
 
         InputStream istream = null;
         OutputStream ostream = null;
@@ -68,10 +63,10 @@ public class Actions {
 //Delete the file after copying
             afile.delete();
 
-            long end = System.currentTimeMillis();
+            final long END_TIME = System.currentTimeMillis();
 
             spit("Copied Successs full");
-            spit("Copied in " + ((end - start) / 1000) + " seconds");
+            spit("Copied in " + ((END_TIME - START_TIME) / 1000) + " seconds");
 
         } catch (IOException ex) {
             spitError(ex.getMessage());
