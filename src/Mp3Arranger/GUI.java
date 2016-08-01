@@ -31,7 +31,7 @@ public class GUI extends JPanel implements ActionListener {
     JFrame gui;
     JButton go;
     JFileChooser folder;
-    JLabel creadit;
+    JLabel credit;
     JProgressBar wait = new JProgressBar();
     JComboBox<String> choice;
     String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
@@ -67,8 +67,8 @@ public class GUI extends JPanel implements ActionListener {
 
         bottomPane.add(wait);
 
-        creadit = new JLabel("Copyright to Aamir khan " + Actions.getSystemYear());
-        bottomPane.add(creadit);
+        credit = new JLabel("Copyright to Aamir khan " + Actions.getSystemYear());
+        bottomPane.add(credit);
         super.add(bottomPane, BorderLayout.SOUTH);
 
         Dimension pathPreferredSize = wait.getPreferredSize();
@@ -90,9 +90,9 @@ public class GUI extends JPanel implements ActionListener {
 
             int val = folder.showDialog(GUI.this, "Select");
             if (val == 0) {
-                File source = folder.getSelectedFile();
-                Info.setPath(source.getPath());
-                path.setText(source.getPath());
+                String source = folder.getSelectedFile().getPath();
+                Info.setPath(source);
+                path.setText(source);
             }
 
         }
@@ -192,7 +192,8 @@ public class GUI extends JPanel implements ActionListener {
                 }
 
                 JLabel taskdoneMsg = new JLabel();
-                taskdoneMsg.setIcon(Actions.EMO_ICON);
+                final ImageIcon EMO_ICON = new ImageIcon(GUI.class.getResource("Img/emoticon_smile.png"));
+                taskdoneMsg.setIcon(EMO_ICON);
                 taskdoneMsg.setText("<html><body><h3 style = color:Green;>Task Completed Successfully </h3></body></html>");
 
                 JOptionPane.showMessageDialog(null, taskdoneMsg, "Done", JOptionPane.PLAIN_MESSAGE);
@@ -208,11 +209,11 @@ public class GUI extends JPanel implements ActionListener {
             }
 
             private void processMp3(File mp3, String tag) throws IOException {
-                File dirPath = new File(Info.getPath() + File.separator + tag);
-                if (!dirPath.exists()) {
-                    dirPath.mkdirs();
+                final File destinationFolder = new File(Info.getPath() + File.separator + tag);
+                if (!destinationFolder.exists()) {
+                    destinationFolder.mkdirs();
                 }
-                int tracker = dataHandler.CopyData(mp3.getAbsolutePath(), dirPath.toString());
+                int tracker = dataHandler.CopyData(mp3.getAbsolutePath(), destinationFolder.toString());
                 wait.setValue(tracker);
             }
 
