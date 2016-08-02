@@ -21,4 +21,19 @@ public class Util {
         System.err.println(obj);
     }
 
+    //
+//    public static String getCurrentYear() {
+//        InputStream connection;
+//        try {
+//            spit("Opening Connection");
+//            connection = new URL("http://www.timeapi.org/utc/now").openStream();
+//            Scanner year = new Scanner(connection);
+//            return year.useDelimiter("\\Z").next().substring(0, 4);
+//        } catch (IOException ex) {
+//            spitError(ex.getLocalizedMessage());
+////            spitError("Connection failed getting system date");
+//            return getSystemYear();
+//        }
+//
+//    }
 }
