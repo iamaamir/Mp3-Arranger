@@ -8,7 +8,6 @@ import java.io.FilenameFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import static Mp3Arranger.Util.spit;
-import static Mp3Arranger.Util.spitError;
 
 /**
  *
@@ -16,7 +15,7 @@ import static Mp3Arranger.Util.spitError;
  */
 public class Actions {
 
-    private int count = 0;
+    public int count = 0;
 
     public static File[] findMp3Files(String folderPath) {
         File folder = new File(folderPath);
@@ -34,12 +33,11 @@ public class Actions {
 
     @SuppressWarnings("null")
     public int CopyData(String song, String destination) throws IOException {
-
         final long START_TIME = System.currentTimeMillis();
 
         InputStream istream = null;
         OutputStream ostream = null;
-        try {
+
             File afile = new File(song);
             File bfile = new File(destination + File.separator + afile.getName());
             istream = new FileInputStream(afile);
@@ -66,9 +64,6 @@ public class Actions {
             spit("Copied Successs full");
             spit("Copied in " + ((END_TIME - START_TIME) / 1000) + " seconds");
 
-        } catch (IOException ex) {
-            spitError(ex.getMessage());
-        }
         return count++;
 
     }
