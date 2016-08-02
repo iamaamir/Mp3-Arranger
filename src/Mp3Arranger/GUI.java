@@ -41,19 +41,14 @@ import javax.swing.UnsupportedLookAndFeelException;
 //            Info, Actions
 public class GUI extends JPanel implements ActionListener {
 
-    private int SCREEN_HEIGHT;
-    private int SCREEN_WIDTH;
-
     JPanel pane, buttonsPane, bottomPane;
     JTextField path;
-    JButton browse;
-    JFrame gui;
-    JButton go;
+    JButton browse, go;
     JFileChooser folder;
     JLabel credit;
     JProgressBar wait;
     JComboBox<String> choice;
-    String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
+    final String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
 
     public GUI() {
 
@@ -125,21 +120,24 @@ public class GUI extends JPanel implements ActionListener {
         }
         if (e.getSource() == go) {
 
-            final URL ERROR_IMG = GUI.class.getResource("Img/error_go.png");
-            final ImageIcon icon = new ImageIcon(ERROR_IMG);
+            final URL ERROR_IMG_URL = GUI.class.getResource("Img/error_go.png");
+            final ImageIcon ERROR_ICON = new ImageIcon(ERROR_IMG_URL);
 
             JLabel errorMsgLabel = new JLabel("<html><body><b>"
                     + "No Mp3 Found "
                     + "Please Reselect the folder containing .Mp3 Files"
                     + "</b></body></html>");
-            errorMsgLabel.setIcon(icon);
+            errorMsgLabel.setIcon(ERROR_ICON);
             errorMsgLabel.setForeground(Color.darkGray);
 
             File mp3Files[] = Actions.findMp3Files(path.getText());
             if (mp3Files.length == 0) {
-                JOptionPane.showMessageDialog(path, errorMsgLabel, "Oo!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(path, errorMsgLabel, "Oo!",
+                        JOptionPane.INFORMATION_MESSAGE);
             } else if (Info.getSortBy() == null) {
-                JOptionPane.showMessageDialog(null, "Please Select a Sort type to Proceed", "Error!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        "Please Select a Sort type to Proceed",
+                        "Error!", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 Info.setMp3(mp3Files);
                 disableButtons(true);
@@ -149,25 +147,16 @@ public class GUI extends JPanel implements ActionListener {
         }
     }
 
-    void disableButtons(boolean b) {
-        //No need to check for buttons since buttonsPane contains only Buttons
-        for (Component btn : buttonsPane.getComponents()) {
-            btn.setEnabled(!b);
-        }
-    }
-
     private void runTask() {
         SwingWorker<Void, Void> task;
         task = new SwingWorker<Void, Void>() {
-            private String tag;
-            private final Actions dataHandler = new Actions();
+            Actions actions = new Actions();
 
             @Override
             protected Void doInBackground() throws Exception {
                 wait.setVisible(true);
                 wait.setMinimum(0);
                 wait.setMaximum(Info.getMp3().length);
-                wait.setStringPainted(true);
 
                 for (File mp3 : Info.getMp3()) {
                     try {
@@ -179,21 +168,15 @@ public class GUI extends JPanel implements ActionListener {
                             switch (Info.getSortBy()) {
 
                                 case "By Artist":
-                                    tag = idv2.getArtist();
-                                    tag = (tag == null) ? "Unknown Artist" : tag;
-                                    processMp3(mp3, tag);
+                                    processMp3(mp3, idv2.getArtist(), "Unknown Artist");
                                     break;
 
                                 case "By Album":
-                                    tag = idv2.getAlbum();
-                                    tag = (tag == null) ? "Unknown Album" : tag;
-                                    processMp3(mp3, tag);
+                                    processMp3(mp3, idv2.getAlbum(), "Unknown Album");
                                     break;
 
                                 case "By Genre":
-                                    tag = idv2.getGenreDescription();
-                                    tag = (tag == null) ? "Unknown Genere" : tag;
-                                    processMp3(mp3, tag);
+                                    processMp3(mp3, idv2.getGenreDescription(), "Unknown Genre");
                                     break;
 
                                 default:
@@ -201,38 +184,43 @@ public class GUI extends JPanel implements ActionListener {
                             }
 
                         } else {
-                            processMp3(mp3, "Un-Defined Tag");
+                            processMp3(mp3, "Un-Defined-Tag", null);
                         }
 
                     } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
-                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                        spitError(ex.toString());
                     }
 
                 }
-
-                JLabel taskdoneMsg = new JLabel();
-                final ImageIcon EMO_ICON = new ImageIcon(GUI.class.getResource("Img/emoticon_smile.png"));
-                taskdoneMsg.setIcon(EMO_ICON);
-                taskdoneMsg.setText("<html><body><h3 style = color:Green;>Task Completed Successfully </h3></body></html>");
-
-                JOptionPane.showMessageDialog(null, taskdoneMsg, "Done", JOptionPane.PLAIN_MESSAGE);
 
                 return null;
             }
 
             @Override
             protected void done() {
-                Info.setMp3(null);
-                wait.setVisible(false);
-                disableButtons(false);
+                Info.setMp3(null);//empty the list
+                wait.setValue(0);//reset the bar
+                wait.setVisible(false);//hide the bar
+                disableButtons(false);//enable buttons
+                
+                JLabel taskdoneMsg = new JLabel();
+                final ImageIcon EMO_ICON = new ImageIcon(GUI.class.getResource("Img/emoticon_smile.png"));
+                taskdoneMsg.setIcon(EMO_ICON);
+                taskdoneMsg.setText("<html><body><h3 style = color:Green;>Task Completed Successfully </h3></body></html>");
+                JOptionPane.showMessageDialog(null, taskdoneMsg, "Done", JOptionPane.PLAIN_MESSAGE);
             }
 
-            private void processMp3(File mp3, String tag) throws IOException {
+            private void processMp3(File mp3, String tag, String defaultTag) throws IOException{
+
+                tag = (tag == null) ? defaultTag : tag;
                 final File destinationFolder = new File(Info.getPath() + File.separator + tag);
                 if (!destinationFolder.exists()) {
                     destinationFolder.mkdirs();
                 }
-                int tracker = dataHandler.CopyData(mp3.getAbsolutePath(), destinationFolder.toString());
+                int tracker = actions.CopyData(
+                        mp3.getCanonicalPath(),
+                        destinationFolder.getCanonicalPath()
+                );
                 wait.setValue(tracker);
             }
 
@@ -242,41 +230,54 @@ public class GUI extends JPanel implements ActionListener {
     }
     //runTask end here
 
-    void showGUI() {
+    static void showGUI() {
+        JFrame gui = new JFrame("Mp3 Arranger");
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screen = tk.getScreenSize();
-        SCREEN_HEIGHT = screen.height / 4;
-        SCREEN_WIDTH = screen.width / 4;
 
+        int SCREEN_HEIGHT = (screen.height / 4);
+        int SCREEN_WIDTH = (screen.width / 4);
+        int GUI_WIDTH = gui.getWidth() / 2;
+        int GUI_HEIGHT = gui.getHeight() / 2;
+        //Show the window in center
+        gui.setLocation(SCREEN_WIDTH + GUI_WIDTH, SCREEN_HEIGHT + GUI_HEIGHT);
         gui.setSize(300, 130);
-        gui.setLocation(SCREEN_WIDTH + gui.getWidth() / 2, SCREEN_HEIGHT + gui.getHeight() / 2);
+        gui.setResizable(false);
+        gui.setVisible(true);
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JComponent newContentPane = new GUI();
         newContentPane.setOpaque(true);
 
         gui.setContentPane(newContentPane);
-        gui.setResizable(false);
-        gui.setVisible(true);
 
         SwingUtilities.updateComponentTreeUI(gui);
 
-        URL favicon = GUI.class.getResource(getBundle("Mp3Arranger/config/Bundle").getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
+        URL favicon = GUI.class.getResource(
+                getBundle("Mp3Arranger/config/Bundle").
+                getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
     }
 
     private void initComponents() {
-        this.gui = new JFrame("Mp3 Arranger");
-        this.go = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("GO"));
-        this.browse = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
-        this.choice = new JComboBox<>(items);
-        this.buttonsPane = new JPanel();
-        this.path = new JTextField(System.getProperty("user.home") + File.separatorChar + "Music", 20);
         this.pane = new JPanel();
         this.bottomPane = new JPanel();
-        this.folder = new JFileChooser();
         this.wait = new JProgressBar();
+        this.buttonsPane = new JPanel();
+        this.folder = new JFileChooser();
+        this.wait.setStringPainted(true);
+        this.choice = new JComboBox<>(items);
+        this.go = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("GO"));
+        this.browse = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
+        this.path = new JTextField(System.getProperty("user.home") + File.separatorChar + "Music", 20);
+    }
+
+    void disableButtons(boolean b) {
+        //No need to check for buttons since buttonsPane contains only Buttons
+        for (Component btn : buttonsPane.getComponents()) {
+            btn.setEnabled(!b);
+        }
     }
 
     public static void main(String args[]) {
@@ -284,7 +285,7 @@ public class GUI extends JPanel implements ActionListener {
 
             @Override
             public void run() {
-                new GUI().showGUI();
+                showGUI();
             }
         });
 
