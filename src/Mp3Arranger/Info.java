@@ -4,7 +4,7 @@ import java.io.File;
 
 /**
  *
- * @author toffe boy Aamir
+ * @author Aamir Khan
  */
 public class Info {
 
