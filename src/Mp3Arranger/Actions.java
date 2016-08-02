@@ -1,23 +1,22 @@
 package Mp3Arranger;
 
-import static Mp3Arranger.Util.spit;
-import static Mp3Arranger.Util.spitError;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.FilenameFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import static Mp3Arranger.Util.spit;
+import static Mp3Arranger.Util.spitError;
 
 /**
  *
- * @author toffe boy Aamir
+ * @author Aamir Khan
  */
 public class Actions {
 
     private int count = 0;
-    
 
     public static File[] findMp3Files(String folderPath) {
         File folder = new File(folderPath);
@@ -60,8 +59,7 @@ public class Actions {
             float fsize = bfile.length() / (1024 * 1024f);
             spit("Total size : " + fsize + " MB");
 
-//Delete the file after copying
-            afile.delete();
+            afile.delete();//Delete the file after copying
 
             final long END_TIME = System.currentTimeMillis();
 
@@ -74,21 +72,5 @@ public class Actions {
         return count++;
 
     }
-//
-//    public static String getCurrentYear() {
-//        InputStream connection;
-//        try {
-//            spit("Opening Connection");
-//            connection = new URL("http://www.timeapi.org/utc/now").openStream();
-//            Scanner year = new Scanner(connection);
-//            return year.useDelimiter("\\Z").next().substring(0, 4);
-//        } catch (IOException ex) {
-//            spitError(ex.getLocalizedMessage());
-////            spitError("Connection failed getting system date");
-//            return getSystemYear();
-//        }
-//
-//    }
-
 
 }
