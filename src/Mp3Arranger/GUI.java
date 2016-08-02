@@ -1,25 +1,42 @@
 package Mp3Arranger;
 
-import static Mp3Arranger.Util.getSystemYear;
-import static Mp3Arranger.Util.spitError;
-import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.Mp3File;
-import com.mpatric.mp3agic.UnsupportedTagException;
-import java.awt.BorderLayout;
+import java.io.File;
+import java.net.URL;
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import javax.swing.JButton;
+import java.awt.BorderLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.UIManager;
+import javax.swing.JComponent;
+import javax.swing.JTextField;
+import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
+import javax.swing.JFileChooser;
+import javax.swing.JProgressBar;
+import com.mpatric.mp3agic.ID3v2;
+import java.awt.event.ActionEvent;
+import javax.swing.SwingUtilities;
+import com.mpatric.mp3agic.Mp3File;
+import java.awt.event.ActionListener;
+import static Mp3Arranger.Util.spitError;
+import static Mp3Arranger.Util.getSystemYear;
+import com.mpatric.mp3agic.InvalidDataException;
+import static java.util.ResourceBundle.getBundle;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import javax.swing.UnsupportedLookAndFeelException;
 
-import javax.swing.*;
-
+/**
+ *
+ * @author Aamir Khan
+ */
 // Referenced classes of package Mp3Arranger:
 //            Info, Actions
 public class GUI extends JPanel implements ActionListener {
@@ -34,7 +51,7 @@ public class GUI extends JPanel implements ActionListener {
     JButton go;
     JFileChooser folder;
     JLabel credit;
-    JProgressBar wait = new JProgressBar();
+    JProgressBar wait;
     JComboBox<String> choice;
     String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
 
@@ -244,21 +261,22 @@ public class GUI extends JPanel implements ActionListener {
 
         SwingUtilities.updateComponentTreeUI(gui);
 
-        URL favicon = GUI.class.getResource(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
+        URL favicon = GUI.class.getResource(getBundle("Mp3Arranger/config/Bundle").getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
     }
 
     private void initComponents() {
         this.gui = new JFrame("Mp3 Arranger");
-        this.go = new JButton(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("GO"));
-        this.browse = new JButton(ResourceBundle.getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
+        this.go = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("GO"));
+        this.browse = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
         this.choice = new JComboBox<>(items);
         this.buttonsPane = new JPanel();
         this.path = new JTextField(System.getProperty("user.home") + File.separatorChar + "Music", 20);
         this.pane = new JPanel();
         this.bottomPane = new JPanel();
         this.folder = new JFileChooser();
+        this.wait = new JProgressBar();
     }
 
     public static void main(String args[]) {
