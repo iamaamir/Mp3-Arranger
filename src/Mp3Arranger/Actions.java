@@ -2,8 +2,6 @@ package Mp3Arranger;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.FilenameFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -33,37 +31,22 @@ public class Actions {
 
     @SuppressWarnings("null")
     public int CopyData(String song, String destination) throws IOException {
-        final long START_TIME = System.currentTimeMillis();
 
-        InputStream istream = null;
-        OutputStream ostream = null;
-
-            File afile = new File(song);
-            File bfile = new File(destination + File.separator + afile.getName());
-            istream = new FileInputStream(afile);
+        File afile = new File(song);
+        File bfile = new File(destination + File.separator + afile.getName());
+        FileOutputStream ostream;
+        try (FileInputStream istream = new FileInputStream(afile)) {
             ostream = new FileOutputStream(bfile);
-            byte[] cfile = new byte[1024];
-
-            while ((istream.read(cfile)) > 0) {
-                ostream.write(cfile);
+            byte[] buffer = new byte[1024];
+            while ((istream.read(buffer)) > 0) {
+                ostream.write(buffer);
                 ostream.flush();
             }
-            istream.close();
-            ostream.close();
-
-            spit("Name : " + bfile.getName());
-            spit(afile.getName() + " Copied into: " + bfile.getParent());
-
-            float fsize = bfile.length() / (1024 * 1024f);
-            spit("Total size : " + fsize + " MB");
-
-            afile.delete();//Delete the file after copying
-
-            final long END_TIME = System.currentTimeMillis();
-
-            spit("Copied Successs full");
-            spit("Copied in " + ((END_TIME - START_TIME) / 1000) + " seconds");
-
+        }
+        ostream.close();
+        afile.delete();//Delete the file after copying
+        spit(afile.getName() + " Copied into: " + bfile.getParent()
+        +"\n------------------------------------------------------");
         return count++;
 
     }
