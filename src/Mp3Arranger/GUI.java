@@ -41,14 +41,15 @@ import javax.swing.UnsupportedLookAndFeelException;
 //            Info, Actions
 public class GUI extends JPanel implements ActionListener {
 
-    JPanel pane, buttonsPane, bottomPane;
-    JTextField path;
-    JButton browse, go;
-    JFileChooser folder;
-    JLabel credit;
-    JProgressBar wait;
-    JComboBox<String> choice;
-    final String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
+    private JPanel pane, buttonsPane, bottomPane;
+    private JTextField path;
+    private JButton browse, go;
+    private JFileChooser folder;
+    private JLabel credit;
+    private JProgressBar wait;
+    private JComboBox<String> choice;
+    private final String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
+    private JLabel taskdoneMsg;
 
     public GUI() {
 
@@ -202,15 +203,10 @@ public class GUI extends JPanel implements ActionListener {
                 wait.setValue(0);//reset the bar
                 wait.setVisible(false);//hide the bar
                 disableButtons(false);//enable buttons
-                
-                JLabel taskdoneMsg = new JLabel();
-                final ImageIcon EMO_ICON = new ImageIcon(GUI.class.getResource("Img/emoticon_smile.png"));
-                taskdoneMsg.setIcon(EMO_ICON);
-                taskdoneMsg.setText("<html><body><h3 style = color:Green;>Task Completed Successfully </h3></body></html>");
                 JOptionPane.showMessageDialog(null, taskdoneMsg, "Done", JOptionPane.PLAIN_MESSAGE);
             }
 
-            private void processMp3(File mp3, String tag, String defaultTag) throws IOException{
+            private void processMp3(File mp3, String tag, String defaultTag) throws IOException {
 
                 tag = (tag == null) ? defaultTag : tag;
                 final File destinationFolder = new File(Info.getPath() + File.separator + tag);
@@ -230,7 +226,7 @@ public class GUI extends JPanel implements ActionListener {
     }
     //runTask end here
 
-private static void showGUI() {
+    private static void showGUI() {
         JFrame gui = new JFrame("Mp3 Arranger");
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screen = tk.getScreenSize();
@@ -256,9 +252,9 @@ private static void showGUI() {
                 getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
-        
+
         SwingUtilities.updateComponentTreeUI(gui);
-        
+
     }
 
     private void initComponents() {
@@ -272,6 +268,10 @@ private static void showGUI() {
         this.go = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("GO"));
         this.browse = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
         this.path = new JTextField(System.getProperty("user.home") + File.separatorChar + "Music", 20);
+        this.taskdoneMsg = new JLabel();
+        final ImageIcon EMO_ICON = new ImageIcon(GUI.class.getResource("Img/emoticon_smile.png"));
+        taskdoneMsg.setIcon(EMO_ICON);
+        taskdoneMsg.setText("<html><body><h3 style = color:Green;>Task Completed Successfully </h3></body></html>");
     }
 
     private void disableButtons(boolean b) {
