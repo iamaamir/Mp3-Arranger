@@ -230,7 +230,7 @@ public class GUI extends JPanel implements ActionListener {
     }
     //runTask end here
 
-    static void showGUI() {
+private static void showGUI() {
         JFrame gui = new JFrame("Mp3 Arranger");
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screen = tk.getScreenSize();
@@ -251,13 +251,14 @@ public class GUI extends JPanel implements ActionListener {
 
         gui.setContentPane(newContentPane);
 
-        SwingUtilities.updateComponentTreeUI(gui);
-
         URL favicon = GUI.class.getResource(
                 getBundle("Mp3Arranger/config/Bundle").
                 getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
+        
+        SwingUtilities.updateComponentTreeUI(gui);
+        
     }
 
     private void initComponents() {
@@ -273,7 +274,7 @@ public class GUI extends JPanel implements ActionListener {
         this.path = new JTextField(System.getProperty("user.home") + File.separatorChar + "Music", 20);
     }
 
-    void disableButtons(boolean b) {
+    private void disableButtons(boolean b) {
         //No need to check for buttons since buttonsPane contains only Buttons
         for (Component btn : buttonsPane.getComponents()) {
             btn.setEnabled(!b);
