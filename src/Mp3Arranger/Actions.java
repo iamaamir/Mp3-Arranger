@@ -29,7 +29,7 @@ public class Actions {
         return null;
     }
 
-    @SuppressWarnings("null")
+
     public int CopyData(String song, String destination) throws IOException {
 
         File afile = new File(song);
@@ -47,7 +47,7 @@ public class Actions {
         afile.delete();//Delete the file after copying
         spit(afile.getName() + " Copied into: " + bfile.getParent()
         +"\n------------------------------------------------------");
-        return count++;
+        return ++count;
 
     }
 
