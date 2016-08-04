@@ -89,12 +89,6 @@ public class GUI extends JPanel implements ActionListener {
         Dimension pathPreferredSize = wait.getPreferredSize();
         pathPreferredSize.width = 250;
         wait.setPreferredSize(pathPreferredSize);
-//        Change the look and feel to Nimbus
-        try {
-            UIManager.setLookAndFeel(new javax.swing.plaf.nimbus.NimbusLookAndFeel());
-        } catch (UnsupportedLookAndFeelException ex) {
-            spitError(ex.toString());
-        }
 
     }
 
@@ -244,7 +238,6 @@ public class GUI extends JPanel implements ActionListener {
 
         JComponent newContentPane = new GUI();
         newContentPane.setOpaque(true);
-
         gui.setContentPane(newContentPane);
 
         URL favicon = GUI.class.getResource(
@@ -252,7 +245,7 @@ public class GUI extends JPanel implements ActionListener {
                 getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
-
+        //update L&F after Startup
         SwingUtilities.updateComponentTreeUI(gui);
 
     }
@@ -282,8 +275,14 @@ public class GUI extends JPanel implements ActionListener {
     }
 
     public static void main(String args[]) {
+        //        Change the look and feel to Nimbus
+        try {
+            UIManager.setLookAndFeel(new javax.swing.plaf.nimbus.NimbusLookAndFeel());
+        } catch (UnsupportedLookAndFeelException ex) {
+            spitError(ex.toString());
+        }
+        //Show the UI
         SwingUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 showGUI();
