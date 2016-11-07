@@ -225,10 +225,10 @@ public class GUI extends JPanel implements ActionListener {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screen = tk.getScreenSize();
 
-        int SCREEN_HEIGHT = (screen.height / 4);
-        int SCREEN_WIDTH = (screen.width / 4);
-        int GUI_WIDTH = gui.getWidth() / 2;
-        int GUI_HEIGHT = gui.getHeight() / 2;
+        final int SCREEN_HEIGHT = screen.height / 4;
+        final int SCREEN_WIDTH  = screen.width / 4;
+        final int GUI_WIDTH     = gui.getWidth() / 2;
+        final int GUI_HEIGHT    = gui.getHeight() / 2;
         //Show the window in center
         gui.setLocation(SCREEN_WIDTH + GUI_WIDTH, SCREEN_HEIGHT + GUI_HEIGHT);
         gui.setSize(300, 130);
