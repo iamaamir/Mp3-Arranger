@@ -10,7 +10,7 @@ public class Info {
 
     private static String sortBy;
     private static File[] mp3;
-    private static String TruePath;
+    private static String path;
 
     public static void setSortBy(String sortBy) {Info.sortBy = sortBy;}
 
@@ -20,7 +20,7 @@ public class Info {
 
     public static File[] getMp3() {return mp3;}
 
-    public static String getPath() {return TruePath;}
+    public static String getPath() {return path;}
 
-    public static void setPath(String TruePath) {Info.TruePath = TruePath;}
+    public static void setPath(String path) {Info.path = path;}
 }
