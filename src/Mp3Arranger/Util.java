@@ -10,7 +10,7 @@ public class Util {
 
     static String getSystemYear() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
-        return (year < 2016) ? "2016" : String.valueOf(year);
+        return (year < 2017) ? "2017" : String.valueOf(year);
     }
 
     static void spit(String obj) {
