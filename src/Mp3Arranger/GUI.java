@@ -242,7 +242,7 @@ public class GUI extends JPanel implements ActionListener {
 
         URL favicon = GUI.class.getResource(
                 getBundle("Mp3Arranger/config/Bundle").
-                getString("IMG/CONTROL_EQUALIZER_BLUE.PNG"));
+                getString("FAVICON"));
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
         //update L&F after Startup
