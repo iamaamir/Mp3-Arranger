@@ -13,9 +13,9 @@ import static Mp3Arranger.Util.spit;
  */
 public class Actions {
 
-    public int count = 0;
+    private int count = 0;
 
-    public static File[] findMp3Files(String folderPath) {
+    public  File[] findMp3Files(String folderPath) {
         File folder = new File(folderPath);
         if (folder.isDirectory()) {
             File[] mp3files = folder.listFiles(new FilenameFilter() {
@@ -26,17 +26,17 @@ public class Actions {
             });
             return mp3files;
         }
+        
         return null;
     }
 
 
-    public int CopyData(String song, String destination) throws IOException {
+    public int moveTo(File song, String destinationFolder) throws IOException {
 
-        File afile = new File(song);
-        File bfile = new File(destination + File.separator + afile.getName());
+        File moveToPath = new File(destinationFolder + File.separator + song.getName());
         FileOutputStream ostream;
-        try (FileInputStream istream = new FileInputStream(afile)) {
-            ostream = new FileOutputStream(bfile);
+        try (FileInputStream istream = new FileInputStream(song)) {
+            ostream = new FileOutputStream(moveToPath);
             byte[] buffer = new byte[1024];
             while ((istream.read(buffer)) > 0) {
                 ostream.write(buffer);
@@ -44,8 +44,8 @@ public class Actions {
             }
         }
         ostream.close();
-        afile.delete();//Delete the file after copying
-        spit(afile.getName() + " Copied into: " + bfile.getParent()
+        song.delete();//Delete the file after copying
+        spit(song.getName() + " <-- Moved to --> " + moveToPath.getParent()
         +"\n------------------------------------------------------");
         return ++count;
 

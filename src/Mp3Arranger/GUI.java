@@ -36,26 +36,27 @@ import javax.swing.UnsupportedLookAndFeelException;
 /**
  *
  * @author Aamir Khan
+ *
+ * Referenced classes of package Mp3Arranger: ---> Info, Actions
  */
-// Referenced classes of package Mp3Arranger:
-//            Info, Actions
 public class GUI extends JPanel implements ActionListener {
 
     private JPanel pane, buttonsPane, bottomPane;
     private JTextField path;
     private JButton browse, go;
     private JFileChooser folder;
-    private JLabel credit;
-    private JProgressBar wait;
+    private final JLabel CREDIT, ERROR_MSG_LABEL;
+    private JProgressBar progressBar;
     private JComboBox<String> choice;
-    private final String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
+    // private final String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
     private JLabel taskdoneMsg;
+    Actions actions;
 
     public GUI() {
 
         super(new BorderLayout());
         initComponents();
-
+        System.out.println("Preparing GUI");
         pane.add(path);
         super.add(pane, BorderLayout.PAGE_START);
 
@@ -78,17 +79,27 @@ public class GUI extends JPanel implements ActionListener {
         folder.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         folder.setMultiSelectionEnabled(false);
 
-        wait.setVisible(false);
+        progressBar.setVisible(false);
 
-        bottomPane.add(wait);
+        bottomPane.add(progressBar);
 
-        credit = new JLabel("Copyright to Aamir khan " + getSystemYear());
-        bottomPane.add(credit);
+        CREDIT = new JLabel("Copyright to Aamir khan " + getSystemYear());
+        bottomPane.add(CREDIT);
         super.add(bottomPane, BorderLayout.SOUTH);
 
-        Dimension pathPreferredSize = wait.getPreferredSize();
+        Dimension pathPreferredSize = progressBar.getPreferredSize();
         pathPreferredSize.width = 250;
-        wait.setPreferredSize(pathPreferredSize);
+        progressBar.setPreferredSize(pathPreferredSize);
+
+        final URL ERROR_IMG = GUI.class.getResource("Img/error_go.png");
+        final ImageIcon ERROR_ICON = new ImageIcon(ERROR_IMG);
+        ERROR_MSG_LABEL = new JLabel("<html><body><b>"
+                + "Nothing Found, "
+                + "Select a folder with <em>.Mp3</em> Files"
+                + "</b></body></html>");
+        ERROR_MSG_LABEL.setIcon(ERROR_ICON);
+        ERROR_MSG_LABEL.setForeground(Color.DARK_GRAY);
+        System.out.println("Welcome to Mp3 Arranger");
 
     }
 
@@ -114,25 +125,15 @@ public class GUI extends JPanel implements ActionListener {
             }
         }
         if (e.getSource() == go) {
-
-            final URL ERROR_IMG_URL = GUI.class.getResource("Img/error_go.png");
-            final ImageIcon ERROR_ICON = new ImageIcon(ERROR_IMG_URL);
-
-            JLabel errorMsgLabel = new JLabel("<html><body><b>"
-                    + "No Mp3 Found "
-                    + "Please Reselect the folder containing .Mp3 Files"
-                    + "</b></body></html>");
-            errorMsgLabel.setIcon(ERROR_ICON);
-            errorMsgLabel.setForeground(Color.darkGray);
-
-            File mp3Files[] = Actions.findMp3Files(path.getText());
-            if (mp3Files.length == 0) {
-                JOptionPane.showMessageDialog(path, errorMsgLabel, "Oo!",
-                        JOptionPane.INFORMATION_MESSAGE);
+            actions = new Actions();
+            File mp3Files[] = actions.findMp3Files(path.getText());
+            if (mp3Files == null || mp3Files.length == 0) {
+                JOptionPane.showMessageDialog(path, ERROR_MSG_LABEL, "Oo!",
+                        JOptionPane.PLAIN_MESSAGE);
             } else if (Info.getSortBy() == null) {
                 JOptionPane.showMessageDialog(null,
-                        "Please Select a Sort type to Proceed",
-                        "Error!", JOptionPane.INFORMATION_MESSAGE);
+                        "Please Select a Sort type.",
+                        "Forgot Something ?", JOptionPane.ERROR_MESSAGE);
             } else {
                 Info.setMp3(mp3Files);
                 disableButtons(true);
@@ -143,15 +144,12 @@ public class GUI extends JPanel implements ActionListener {
     }
 
     private void runTask() {
-        SwingWorker<Void, Void> task;
-        task = new SwingWorker<Void, Void>() {
-            Actions actions = new Actions();
-
+        SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                wait.setVisible(true);
-                wait.setMinimum(0);
-                wait.setMaximum(Info.getMp3().length);
+                progressBar.setVisible(true);
+                progressBar.setMinimum(0);
+                progressBar.setMaximum(Info.getMp3().length);
 
                 for (File mp3 : Info.getMp3()) {
                     try {
@@ -179,7 +177,7 @@ public class GUI extends JPanel implements ActionListener {
                             }
 
                         } else {
-                            processMp3(mp3, "Un-Defined-Tag", null);
+                            processMp3(mp3, "Unknown", null);
                         }
 
                     } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
@@ -194,8 +192,8 @@ public class GUI extends JPanel implements ActionListener {
             @Override
             protected void done() {
                 Info.setMp3(null);//empty the list
-                wait.setValue(0);//reset the bar
-                wait.setVisible(false);//hide the bar
+                progressBar.setValue(0);//reset the bar
+                progressBar.setVisible(false);//hide the bar
                 disableButtons(false);//enable buttons
                 JOptionPane.showMessageDialog(null, taskdoneMsg, "Done", JOptionPane.PLAIN_MESSAGE);
             }
@@ -207,11 +205,8 @@ public class GUI extends JPanel implements ActionListener {
                 if (!destinationFolder.exists()) {
                     destinationFolder.mkdirs();
                 }
-                int tracker = actions.CopyData(
-                        mp3.getCanonicalPath(),
-                        destinationFolder.getCanonicalPath()
-                );
-                wait.setValue(tracker);
+                int tracker = actions.moveTo(mp3, destinationFolder.getAbsolutePath());
+                progressBar.setValue(tracker);
             }
 
         };
@@ -221,14 +216,15 @@ public class GUI extends JPanel implements ActionListener {
     //runTask end here
 
     private static void showGUI() {
+        System.out.println("Starting Mp3 Arranger...");
         JFrame gui = new JFrame("Mp3 Arranger");
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screen = tk.getScreenSize();
 
         final int SCREEN_HEIGHT = screen.height / 4;
-        final int SCREEN_WIDTH  = screen.width / 4;
-        final int GUI_WIDTH     = gui.getWidth() / 2;
-        final int GUI_HEIGHT    = gui.getHeight() / 2;
+        final int SCREEN_WIDTH = screen.width / 4;
+        final int GUI_WIDTH = gui.getWidth() / 2;
+        final int GUI_HEIGHT = gui.getHeight() / 2;
         //Show the window in center
         gui.setLocation(SCREEN_WIDTH + GUI_WIDTH, SCREEN_HEIGHT + GUI_HEIGHT);
         gui.setSize(300, 130);
@@ -242,7 +238,7 @@ public class GUI extends JPanel implements ActionListener {
 
         URL favicon = GUI.class.getResource(
                 getBundle("Mp3Arranger/config/Bundle").
-                getString("FAVICON"));
+                        getString("FAVICON"));
         ImageIcon icon = new ImageIcon(favicon);
         gui.setIconImage(icon.getImage());
         //update L&F after Startup
@@ -251,13 +247,14 @@ public class GUI extends JPanel implements ActionListener {
     }
 
     private void initComponents() {
+        System.out.println("Initializing components...");
         this.pane = new JPanel();
         this.bottomPane = new JPanel();
-        this.wait = new JProgressBar();
+        this.progressBar = new JProgressBar();
         this.buttonsPane = new JPanel();
         this.folder = new JFileChooser();
-        this.wait.setStringPainted(true);
-        this.choice = new JComboBox<>(items);
+        this.progressBar.setStringPainted(true);
+        this.choice = new JComboBox<>(new String[]{"Sort By", "By Artist", "By Album", "By Genre"});
         this.go = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("GO"));
         this.browse = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
         this.path = new JTextField(System.getProperty("user.home") + File.separatorChar + "Music", 20);
