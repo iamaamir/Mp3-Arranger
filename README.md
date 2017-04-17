@@ -7,24 +7,24 @@ A Simple Mp3 File Arranger
 
 ![Running on ubuntu 14.4](https://github.com/iamaamir/Mp3-Arranger/blob/master/src/screen%20shots/linux_demo.png?raw=true) 
 
-###How it Works?
+### How it Works?
 It Simply Reads the Tags of the Files And Arrange them on the Basis of those Tags..
 
 
-###Supported Tags Are
+### Supported Tags Are
 
 * By Artist
 * By Album
 * By Genre
 
-###Pre Requirements
+### Pre Requirements
 You just need to have [Java 1.7](http://java.com) or later installed on your machine
 
-###How to Install ?
+### How to Install ?
 Simply [Download](http://mp3a.sourceforge.net/) it and Run it.
 
 
-####Build with maven like this:
+#### Build with maven like this:
 
 `mvn package`
 
