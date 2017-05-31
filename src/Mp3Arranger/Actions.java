@@ -15,8 +15,7 @@ public class Actions {
 
     private int count = 0;
 
-    public  File[] findMp3Files(String folderPath) {
-        File folder = new File(folderPath);
+    public  File[] findMp3Files(final File folder) {
         if (folder.isDirectory()) {
             File[] mp3files = folder.listFiles(new FilenameFilter() {
                 @Override
