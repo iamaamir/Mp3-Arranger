@@ -8,13 +8,9 @@ import java.io.File;
  */
 public class Info {
 
-    private static String sortBy;
     private static File[] mp3;
     private static String path;
 
-    public static void setSortBy(String sortBy) {Info.sortBy = sortBy;}
-
-    public static String getSortBy() {return Info.sortBy;}
 
     public static void setMp3(File[] mp3) {Info.mp3 = mp3;}
 
