@@ -45,10 +45,10 @@ public class GUI extends JPanel implements ActionListener {
     private JTextField path;
     private JButton browse, go;
     private JFileChooser folder;
-    private final JLabel CREDIT, ERROR_MSG_LABEL;
+    private final JLabel CREDIT, NO_MP3_ERROR;
     private JProgressBar progressBar;
     private JComboBox<String> choice;
-    // private final String[] items = {"Sort By", "By Artist", "By Album", "By Genre"};
+    private final String[] SORTING_OPTIONS = {"Sort By", "By Artist", "By Album", "By Genre"};
     private JLabel taskdoneMsg;
     Actions actions;
 
@@ -93,12 +93,11 @@ public class GUI extends JPanel implements ActionListener {
 
         final URL ERROR_IMG = GUI.class.getResource("Img/error_go.png");
         final ImageIcon ERROR_ICON = new ImageIcon(ERROR_IMG);
-        ERROR_MSG_LABEL = new JLabel("<html><body><b>"
-                + "Nothing Found, "
-                + "Select a folder with <em>.Mp3</em> Files"
-                + "</b></body></html>");
-        ERROR_MSG_LABEL.setIcon(ERROR_ICON);
-        ERROR_MSG_LABEL.setForeground(Color.DARK_GRAY);
+        NO_MP3_ERROR = new JLabel("<html><body>"
+                + "Please select a folder with <b>.mp3</b> Files"
+                + "</body></html>");
+        NO_MP3_ERROR.setIcon(ERROR_ICON);
+        NO_MP3_ERROR.setForeground(Color.DARK_GRAY);
         System.out.println("Welcome to Mp3 Arranger");
 
     }
@@ -116,24 +115,21 @@ public class GUI extends JPanel implements ActionListener {
             }
 
         }
-        if (e.getSource() == choice) {
-            String sortBy = choice.getSelectedItem().toString();
-            if (sortBy.equals("Sort By")) {
-                JOptionPane.showMessageDialog(null, "Choose a Valid Sort to Arrange Your Files", "Opps!", 0);
-            } else {
-                Info.setSortBy(sortBy);
-            }
-        }
         if (e.getSource() == go) {
             actions = new Actions();
-            File mp3Files[] = actions.findMp3Files(path.getText());
-            if (mp3Files == null || mp3Files.length == 0) {
-                JOptionPane.showMessageDialog(path, ERROR_MSG_LABEL, "Oo!",
+            File mp3_folder = new File(path.getText());
+            File mp3Files[] = actions.findMp3Files(mp3_folder);
+
+            if (!(mp3_folder.isDirectory())) {
+                JOptionPane.showMessageDialog(path, NO_MP3_ERROR, "Invalid path",
                         JOptionPane.PLAIN_MESSAGE);
-            } else if (Info.getSortBy() == null) {
+            } else if (mp3Files == null || mp3Files.length == 0) {
+                JOptionPane.showMessageDialog(path, NO_MP3_ERROR, "No MP3 Found",
+                        JOptionPane.PLAIN_MESSAGE);
+            } else if (choice.getSelectedItem().toString().equals("Sort By")) {
                 JOptionPane.showMessageDialog(null,
                         "Please Select a Sort type.",
-                        "Forgot Something ?", JOptionPane.ERROR_MESSAGE);
+                        "Forgot Soething ?", JOptionPane.ERROR_MESSAGE);
             } else {
                 Info.setMp3(mp3Files);
                 disableButtons(true);
@@ -158,7 +154,7 @@ public class GUI extends JPanel implements ActionListener {
                         if (song.hasId3v2Tag()) {
                             ID3v2 idv2 = song.getId3v2Tag();
 
-                            switch (Info.getSortBy()) {
+                            switch (choice.getSelectedItem().toString()) {
 
                                 case "By Artist":
                                     processMp3(mp3, idv2.getArtist(), "Unknown Artist");
@@ -254,7 +250,7 @@ public class GUI extends JPanel implements ActionListener {
         this.buttonsPane = new JPanel();
         this.folder = new JFileChooser();
         this.progressBar.setStringPainted(true);
-        this.choice = new JComboBox<>(new String[]{"Sort By", "By Artist", "By Album", "By Genre"});
+        this.choice = new JComboBox<>(SORTING_OPTIONS);
         this.go = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("GO"));
         this.browse = new JButton(getBundle("Mp3Arranger/config/Bundle").getString("BROWSE.."));
         this.path = new JTextField(System.getProperty("user.home") + File.separatorChar + "Music", 20);
